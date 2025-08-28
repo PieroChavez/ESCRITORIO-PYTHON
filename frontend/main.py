@@ -1,79 +1,63 @@
+# frontend/main.py
 import sys
-from PyQt6.QtWidgets import (
-    QApplication, QWidget, QLabel, QLineEdit,
-    QPushButton, QVBoxLayout, QMessageBox
-)
+import os
+from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import Qt
 
-class LoginWindow(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Login - Sistema de Ventas de Café")
-        self.setGeometry(400, 200, 350, 200)
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-        layout = QVBoxLayout()
+from Auth.Welcome import WelcomeWindow
 
-        # Título
-        title_label = QLabel("Iniciar sesión")
-        title_label.setStyleSheet("font-size: 20px; font-weight: bold;")
-        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(title_label)
-
-        # Campo de usuario
-        self.username_input = QLineEdit()
-        self.username_input.setPlaceholderText("Usuario")
-        layout.addWidget(self.username_input)
-
-        # Campo de contraseña
-        self.password_input = QLineEdit()
-        self.password_input.setPlaceholderText("Contraseña")
-        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
-        layout.addWidget(self.password_input)
-
-        # Botón de login
-        login_button = QPushButton("Iniciar sesión")
-        login_button.clicked.connect(self.handle_login)
-        layout.addWidget(login_button)
-
-        self.setLayout(layout)
-
-    def handle_login(self):
-        username = self.username_input.text()
-        password = self.password_input.text()
-
-        # Validación básica
-        if not username or not password:
-            QMessageBox.warning(self, "Error", "Completa todos los campos")
-            return
-
-        # Aquí pondremos la llamada al backend. Por ahora simularemos:
-        if username == "admin" and password == "1234":
-            QMessageBox.information(self, "Éxito", "¡Inicio de sesión correcto!")
-            self.open_dashboard()
-        else:
-            QMessageBox.critical(self, "Error", "Usuario o contraseña incorrectos")
-
-    def open_dashboard(self):
-        # Por ahora solo cerramos login y mostramos un mensaje de ejemplo
-        self.close()
-        self.dashboard = DashboardWindow()
-        self.dashboard.show()
-
-class DashboardWindow(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Dashboard - Sistema de Ventas de Café")
-        self.setGeometry(400, 200, 500, 300)
-
-        layout = QVBoxLayout()
-        label = QLabel("Bienvenido al Dashboard del sistema de ventas de café ☕")
-        label.setStyleSheet("font-size: 16px; font-weight: bold;")
-        layout.addWidget(label)
-
-        self.setLayout(layout)
-
-if __name__ == "__main__":
+def main():
     app = QApplication(sys.argv)
-    window = LoginWindow()
+    
+    # Global application styles
+    app.setStyle('Fusion')  # Modern style base
+    
+    # Global stylesheet for the entire application
+    app.setStyleSheet("""
+        QWidget {
+            background-color: #f0f0f0;
+            font-family: Arial;
+        }
+        QLabel {
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        QPushButton {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            font-size: 14px;
+            min-width: 120px;
+        }
+        QPushButton:hover {
+            background-color: #2980b9;
+        }
+        QLineEdit {
+            padding: 8px;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+            background-color: white;
+            font-size: 14px;
+        }
+        QLineEdit:focus {
+            border: 2px solid #3498db;
+        }
+        QMessageBox {
+            background-color: #f0f0f0;
+        }
+        QMessageBox QPushButton {
+            min-width: 80px;
+        }
+    """)
+
+    window = WelcomeWindow()
     window.show()
     sys.exit(app.exec())
+
+if __name__ == "__main__":
+    main()
